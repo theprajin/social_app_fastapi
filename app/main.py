@@ -5,10 +5,12 @@ from fastapi import FastAPI, Response, status, HTTPException
 from fastapi.params import Body, Depends
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from . import models, schemas
+
+from . import models, schemas, utils
 
 from sqlalchemy.orm import Session
 from .database import engine, get_db
+
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -157,3 +159,17 @@ def update_post(id: int, updated_post: schemas.PostCreate, db: Session = Depends
     post_query.update(updated_post.dict(), synchronize_session=False)
     db.commit()
     return post_query.first()
+
+
+@app.post("/users", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    # hash the password - user.password
+    hashed_password = utils.hash_pwd(user.password)
+    user.password = hashed_password
+
+    new_user = models.User(**user.dict())  # dict unpacking
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    return new_user
