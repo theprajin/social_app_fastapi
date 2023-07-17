@@ -1,4 +1,4 @@
-from msilib import type_nullable
+
 
 from .database import Base
 from sqlalchemy import Column, Integer, String, Boolean
