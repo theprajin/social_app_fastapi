@@ -17,9 +17,10 @@ load_dotenv()
 DB_USERNAME = os.getenv("DB_USERNAME")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 HOST_NAME = os.getenv("HOST_NAME")
+PORT = os.getenv("PORT")
 DATABASE_NAME = os.getenv("DATABASE_NAME")
 
-SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@{HOST_NAME}/{DATABASE_NAME}"  # for SQLite, we need connect_args
+SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@{HOST_NAME}:{PORT}/{DATABASE_NAME}"  # for SQLite, we need connect_args
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
